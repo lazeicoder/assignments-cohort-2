@@ -39,11 +39,18 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
   
-  const app = express();
+const app = express();
   
-  app.use(bodyParser.json());
+app.use(bodyParser.json());
+
+const todosList = [];
+
+app.get('/todos', function(req, res) {
   
-  module.exports = app;
+})
+  
+module.exports = app;
