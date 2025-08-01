@@ -42,15 +42,67 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
   
 const app = express();
   
 app.use(bodyParser.json());
 
-const todosList = [];
+const filePath = path.join(__dirname, 'todos.json');
+
+const findIndex = (todoList, todoId) => {
+  for (let i = 0; i < todoList.length; i++) {
+    if(todoList[i].uid === todoId) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+const lastIndex = (todoList) => {
+  if (todoList.length === 0) return 1;
+  else return todoList[todoList.length-1].uid + 1;
+}
+
 
 app.get('/todos', function(req, res) {
-  
+  fs.readFile(filePath, "utf-8", (err, rawData) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Failed to retrieve items"
+      });
+    } else {
+      const fileData = JSON.parse(rawData);
+      res.json(fileData);
+    }
+  });
+});
+
+app.get('/todos/:id', function(req, res) {
+  const todoId = parseInt(req.params.id);
+  fs.readFile(filePath, "utf-8", (err, rawData) => {
+    const todoList = JSON.parse(rawData);
+    const indexIs = findIndex(todoList, todoId);
+
+    if (indexIs === -1) {
+      return res.status(404).send("Not Found");
+    }
+
+    res.json(todoList[indexIs]);
+  });
+});
+
+app.post('/todos', function(req, res) {
+  const todoId = 1;
+
+  fs.readFile(filePath, "utf-8", (err, rawData) => {
+    
+  })
+  const newTodoItem = {
+    uid: 
+  }
 })
+
+app.listen(3000);
   
 module.exports = app;

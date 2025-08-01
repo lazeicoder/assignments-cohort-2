@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "uid": 1,
+        "title": "Go for a Walk",
+        "description": "Complete daily run and complete steps count"
+    },
+    {
+        "uid": 2,
+        "title": "Study DSA",
+        "description": "Study the interview topics and revise previous concepts"
+    }
+]
