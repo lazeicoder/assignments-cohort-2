@@ -48,83 +48,126 @@ const app = express();
   
 app.use(bodyParser.json());
 
-let newTodoId = -1;
-
 const filePath = path.join(__dirname, 'todos.json');
 
-const findIndex = (todoList, todoId) => {
-  for (let i = 0; i < todoList.length; i++) {
-    if(todoList[i].uid === todoId) {
-      return i;
+const findIndexOfTodo = (todoList, todoId) => {
+    for (let i = 0; i < todoList.length; i++) {
+        if (todoList[i].id === todoId) {
+            return i;
+        }
     }
-  }
-  return -1;
+
+    return -1;
 }
 
-const lastIndex = (todoList) => {
-  if (todoList.length === 0) return 1;
-  else return todoList[todoList.length-1].uid + 1;
+const deleteTodo = (todoList, todoInd) => {
+    let newTodoList = [];
+    for (let i = 0; i < todoList.length; i++) {
+        if (i !== todoInd) {
+            newTodoList.push(todoList[i]);
+        } 
+    }
+    return newTodoList;
 }
 
-
-app.get('/todos', function(req, res) {
-  fs.readFile(filePath, "utf-8", (err, rawData) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Failed to retrieve items"
-      });
-    } else {
-      const fileData = JSON.parse(rawData);
-
-      if(newTodoId === -1) {
-        newTodoId = lastIndex(fileData);
-      }
-
-      console.log(newTodoId);
-      res.json(fileData);
-    }
-  });
+app.get('/todos', (req, res) => {
+    fs.readFile(filePath, 'utf-8', (err, rawData) => {
+        if (err) {
+            throw err;
+        }
+        const todoList = JSON.parse(rawData);
+        res.json(todoList);
+    });
 });
 
-app.get('/todos/:id', function(req, res) {
-  const todoId = parseInt(req.params.id);
-  fs.readFile(filePath, "utf-8", (err, rawData) => {
-    const todoList = JSON.parse(rawData);
-    const indexIs = findIndex(todoList, todoId);
+app.get('/todos/:id', (req, res) => {
+    fs.readFile(filePath, 'utf-8', (err, rawData) => {
+        if(err) {
+            throw err;
+        }
 
-    if (indexIs === -1) {
-      return res.status(404).send("Not Found");
-    }
+        let todoList = JSON.parse(rawData);
+        const todoInd = findIndexOfTodo(todoList, parseInt(req.params.id));
 
-    res.json(todoList[indexIs]);
-  });
+        if(todoInd === -1) {
+            return res.status(404).send();
+        }
+
+        res.json(todoList[todoInd]);
+    });
 });
 
-app.post('/todos', function(req, res) {
+app.post('/todos', (req, res) => {
   const newTodoItem = {
-    uid: newTodoId,
+    id: Math.floor(Math.random() * 1000000),
     title: req.body.title,
     description: req.body.description
   };
+    fs.readFile(filePath, 'utf-8', (err, rawData) => {
+        let todoList = JSON.parse(rawData);
+        todoList.push(newTodoItem);
 
-  newTodoId++;
+        fs.writeFile(filePath, JSON.stringify(todoList, null, 2), (err) => {
+            if(err) {
+                throw err;
+            }
 
-  fs.readFile(filePath, "utf-8", (err, rawData) => {
-    if(err) {
+            res.status(201).json(newTodoItem);
+        });
+    });
+});
+
+app.put('/todos/:id', (req, res) => {
+    fs.readFile(filePath, 'utf-8', (err, rawData) => {
+        let todoList = JSON.parse(rawData);
+        const todoInd = findIndexOfTodo(todoList, parseInt(req.params.id));
+
+        if(todoInd === -1) {
+            return res.status(404).send();
+        }
+
+        const updatedTodo = {
+            id: todoList[todoInd].id,
+            title: req.body.title,
+            description: req.body.description
+        };
+
+        todoList[todoInd] = updatedTodo;
+
+        fs.writeFile(filePath, JSON.stringify(todoList, null, 2), (err) => {
+            if (err) {
+                throw err;
+            }
+            res.status(200).json(updatedTodo);
+        });
+    });
+});
+
+app.delete('/todos/:id', (req, res) => {
+  fs.readFile(filePath, 'utf-8', (err, rawData) => {
+    if (err) {
       throw err;
     }
-    const todoList = JSON.parse(rawData);
-    todoList.push(newTodoItem);
 
-    fs.writeFile(filePath, JSON.stringify(todoList, null, 2), (err) => {
-      if(err) {
-        throw err;
-      }
-      res.status(201).json(newTodoItem);
-    });
+      let todoList = JSON.parse(rawData);
+      const todoInd = findIndexOfTodo(todoList, parseInt(req.params.id));
+      if (todoInd === -1) {
+          return res.status(404).send();
+      } 
+
+      todoList = deleteTodo(todoList, todoInd);
+      fs.writeFile(filePath, JSON.stringify(todoList, null, 2), (err) => {
+        if(err) {
+          throw err;
+        }
+        res.status(200).send();
+      });
   });
 });
 
-app.listen(3000);
+app.use((req, res, next) => {
+  res.status(404).send();
+});
+
   
 module.exports = app;
