@@ -48,6 +48,8 @@ const app = express();
   
 app.use(bodyParser.json());
 
+let newTodoId = -1;
+
 const filePath = path.join(__dirname, 'todos.json');
 
 const findIndex = (todoList, todoId) => {
@@ -73,6 +75,12 @@ app.get('/todos', function(req, res) {
       });
     } else {
       const fileData = JSON.parse(rawData);
+
+      if(newTodoId === -1) {
+        newTodoId = lastIndex(fileData);
+      }
+
+      console.log(newTodoId);
       res.json(fileData);
     }
   });
@@ -93,15 +101,29 @@ app.get('/todos/:id', function(req, res) {
 });
 
 app.post('/todos', function(req, res) {
-  const todoId = 1;
+  const newTodoItem = {
+    uid: newTodoId,
+    title: req.body.title,
+    description: req.body.description
+  };
+
+  newTodoId++;
 
   fs.readFile(filePath, "utf-8", (err, rawData) => {
-    
-  })
-  const newTodoItem = {
-    uid: 
-  }
-})
+    if(err) {
+      throw err;
+    }
+    const todoList = JSON.parse(rawData);
+    todoList.push(newTodoItem);
+
+    fs.writeFile(filePath, JSON.stringify(todoList, null, 2), (err) => {
+      if(err) {
+        throw err;
+      }
+      res.status(201).json(newTodoItem);
+    });
+  });
+});
 
 app.listen(3000);
   

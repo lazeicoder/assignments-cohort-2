@@ -1,12 +1,62 @@
 [
-    {
-        "uid": 1,
-        "title": "Go for a Walk",
-        "description": "Complete daily run and complete steps count"
-    },
-    {
-        "uid": 2,
-        "title": "Study DSA",
-        "description": "Study the interview topics and revise previous concepts"
-    }
+  {
+    "uid": 1,
+    "title": "Go for a Walk",
+    "description": "Complete daily run and complete steps count"
+  },
+  {
+    "uid": 2,
+    "title": "Study DSA",
+    "description": "Study the interview topics and revise previous concepts"
+  },
+  {
+    "uid": 3,
+    "title": "Learn new Skill",
+    "description": "Complete the development task."
+  },
+  {
+    "uid": 4,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 5,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 5,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 5,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 6,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 7,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 8,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 9,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  },
+  {
+    "uid": 10,
+    "title": "Write a mail to the manager",
+    "description": "Complete the weekly task and push the code into the codebase."
+  }
 ]
