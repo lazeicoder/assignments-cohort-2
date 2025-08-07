@@ -14,7 +14,11 @@ const app = express();
 let numberOfRequestsForUser = {};
 setInterval(() => {
     numberOfRequestsForUser = {};
-}, 1000)
+}, 1000);
+
+const rateLimittingMiddleware = (req, res, next) => {
+  
+}
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
